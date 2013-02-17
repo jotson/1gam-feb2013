@@ -23,9 +23,20 @@ pauseView = View:extend {
     reset = function(self)
     end,
 
+    onNew = function(self)
+    end,
+    
     onUpdate = function(self, dt)
+        if the.keys:justPressed('escape') then
+            the.app:changeState(the.app.STATE_START)
+        end
+
+        if the.keys:justPressed(' ') then
+            the.app:changeState(the.app.STATE_PLAYING)
+        end
     end,
 
     onDraw = function(self)
+        love.graphics.print('Paused', 50, 50)
     end
 }

@@ -23,9 +23,16 @@ playView = View:extend {
     reset = function(self)
     end,
 
+    onNew = function(self)
+    end,
+    
     onUpdate = function(self, dt)
+        if the.keys:justPressed('escape') then
+            the.app:changeState(the.app.STATE_PAUSED)
+        end
     end,
 
     onDraw = function(self)
+        love.graphics.print('Playing', 50, 50)
     end
 }

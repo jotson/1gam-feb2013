@@ -24,8 +24,12 @@ gameoverView = View:extend {
     end,
 
     onUpdate = function(self, dt)
+        if the.keys:justPressed(' ') then
+            the.app:changeState(the.app.STATE_START)
+        end
     end,
 
     onDraw = function(self)
+        love.graphics.print('Game over', 50, 50)
     end
 }

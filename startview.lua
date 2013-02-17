@@ -23,10 +23,24 @@ startView = View:extend {
     reset = function(self)
     end,
 
+    onNew = function(self)
+    end,
+    
     onUpdate = function(self, dt)
+        if the.keys:justPressed('escape') then
+            love.event.push("quit")
+        end
+
+        if the.keys:justPressed(' ') then
+            the.app:changeState(the.app.STATE_PLAYING)
+        end
     end,
 
     onDraw = function(self)
-        love.graphics.print("Hello, World!", 50, 50)
+        local blink_factor = math.abs(math.sin(love.timer.getMicroTime()*1.2))
+
+        love.graphics.setColor(255, 255, 255, blink_factor*200+55)
+        love.graphics.printf("[SPACE] TO START", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
+        love.graphics.printf("[ESC] TO QUIT", 0, love.graphics.getHeight()/2+40, love.graphics.getWidth(), "center")
     end
 }
