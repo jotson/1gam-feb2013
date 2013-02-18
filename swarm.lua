@@ -19,17 +19,54 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-gameoverView = View:new {
-    reset = function(self)
+swarm = Sprite:extend{
+    count = 10,
+    members = {},
+
+    onNew = function(self)
+        for i = 1, self.count do
+            local m = swarm_member:new()
+            m:init(self)
+            table.insert(self.members, m)
+        end
+        the.view:add(self)
+    end,
+
+    onUpdate = function(self)
+        -- TODO Calculate center of swarm
+        
+        -- PLACEHOLDER:
+        self.x = love.mouse.getX()
+        self.y = love.mouse.getY()
+    end,
+}
+
+swarm_member = Sprite:extend{
+    init = function(self, swarm)
+        self.swarm = swarm
+        self.x = swarm.x + math.random(100) - 50
+        self.y = swarm.y + math.random(100) - 50
+    end,
+
+    onNew = function(self, swarm)
+        the.view:add(self)
     end,
 
     onUpdate = function(self, dt)
-        if the.keys:justPressed(' ') then
-            the.app:changeState(the.app.STATE_START)
-        end
+        -- TODO Swarming behavior
+        -- TODO Go towards swarm center
+        -- TODO Keep minimum distance from other members
+
+        -- PLACEHOLDER:
+        self.x = self.swarm.x + math.random(100) - 50
+        self.y = self.swarm.y + math.random(100) - 50
     end,
 
     onDraw = function(self)
-        love.graphics.print('Game over', 50, 50)
-    end
+        -- TODO: Replace with animated sprite
+        love.graphics.push()
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.circle("fill", self.x, self.y, 10)
+        love.graphics.pop()
+    end,
 }

@@ -1,4 +1,4 @@
--- January2013
+-- February2013
 -- Copyright © 2013 John Watson <john@watson-net.com>
 
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,11 +19,16 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-playView = View:extend {
+require 'pointer'
+require 'swarm'
+
+playView = View:new {
     reset = function(self)
     end,
 
     onNew = function(self)
+        self.pointer = pointer:new()
+        self.swarm = swarm:new()
     end,
     
     onUpdate = function(self, dt)

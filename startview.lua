@@ -1,4 +1,4 @@
--- January2013
+-- February2013
 -- Copyright © 2013 John Watson <john@watson-net.com>
 
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -19,7 +19,7 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-startView = View:extend {
+startView = View:new {
     reset = function(self)
     end,
 

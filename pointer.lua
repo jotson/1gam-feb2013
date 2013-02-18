@@ -19,17 +19,19 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-gameoverView = View:new {
-    reset = function(self)
+pointer = Animation:extend{
+    image = 'img/crosshair.png',
+    width = 20,
+    height = 20,
+    sequences = { default = { frames = { 1 }, fps = 10 } },
+
+    onNew = function(self)
+        the.view:add(self)
     end,
 
     onUpdate = function(self, dt)
-        if the.keys:justPressed(' ') then
-            the.app:changeState(the.app.STATE_START)
-        end
+        self.x = love.mouse.getX()
+        self.y = love.mouse.getY()
+        self.play('default')
     end,
-
-    onDraw = function(self)
-        love.graphics.print('Game over', 50, 50)
-    end
 }
