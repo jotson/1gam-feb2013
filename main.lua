@@ -35,10 +35,13 @@ the.app = App:new{
     STATE_PAUSED = 3,
     STATE_GAMEOVER = 4,
 
-    name = "GAME",
+    name = "Asteroid Defense",
 
     onRun = function(self)
         -- Load audio, font, graphics
+        self.music = love.audio.newSource('snd/music.mp3', 'stream')
+        self.music:setLooping(true)
+        self.music:play()
 
         love.mouse.setVisible(false)
 

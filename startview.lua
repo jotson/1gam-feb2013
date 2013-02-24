@@ -40,9 +40,11 @@ startView = View:new {
 
     onDraw = function(self)
         local blink_factor = math.abs(math.sin(love.timer.getMicroTime()*1.2))
+        local start = love.graphics.getHeight() * 0.8;
 
         love.graphics.setColor(255, 255, 255, blink_factor*200+55)
-        love.graphics.printf("[SPACE] TO START", 0, love.graphics.getHeight()/2, love.graphics.getWidth(), "center")
-        love.graphics.printf("[ESC] TO QUIT", 0, love.graphics.getHeight()/2+40, love.graphics.getWidth(), "center")
+        love.graphics.printf("[SPACE] TO START", 0, start, love.graphics.getWidth(), "center")
+        love.graphics.printf("[ESC] TO QUIT", 0, start + 40, love.graphics.getWidth(), "center")
+        love.graphics.setColor(255, 255, 255, 255)
     end
 }

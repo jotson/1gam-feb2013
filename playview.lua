@@ -21,23 +21,33 @@
 
 require 'pointer'
 require 'swarm'
+require 'asteroid'
 
 playView = View:new {
     id = 'playview',
 
     reset = function(self)
-        if (not self.swarm) then
+        if not self.swarm then
             self.swarm = swarm:new()
             the.app:add(self.swarm)
         else
             self.swarm:reset()
         end
+        self.swarm:addMember(10)
+        self.timer:every(1, function() self.swarm:addMember(1, 700, 450) end)
 
-        if (self.pointer) then
+        self.timer:every(1, function() self:launchAsteroid() end)
+
+        if self.pointer then
             self:remove(self.pointer)
         end
         self.pointer = pointer:new()
         the.app:add(self.pointer)
+    end,
+
+    launchAsteroid = function(self)
+        local m = asteroid:new()
+        the.app:add(m)
     end,
 
     onNew = function(self)
@@ -50,11 +60,6 @@ playView = View:new {
     end,
 
     onDraw = function(self)
-        love.graphics.push()
-
-        love.graphics.setColor(255,255,255,255)
-        love.graphics.print('Playing', 50, 50)
-
-        love.graphics.pop()
+        love.graphics.setColor(255, 255, 255, 255)
     end
 }

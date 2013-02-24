@@ -20,7 +20,9 @@
 -- SOFTWARE.
 
 swarm = Sprite:extend{
-    count = 100,
+    MAX_MEMBERS = 100,
+
+    id = 'swarm',
     members = {},
     width = 1,
     height = 1,
@@ -36,16 +38,37 @@ swarm = Sprite:extend{
         self.y = love.mouse.getY()
     end,
 
+    addMember = function(self, count, x, y)
+        count = count or 1
+
+        if #self.members >= self.MAX_MEMBERS then
+            return
+        end
+
+        for i = 1, count do
+            local m = swarm_member:new()
+            m:init(self)
+            m.x = x or math.random(love.graphics.getWidth())
+            m.y = y or math.random(love.graphics.getHeight())
+            table.insert(self.members, m)
+        end
+    end,
+
+    remove = function(self, object)
+        for i = #self.members,1,-1 do
+            if self.members[i] == object then
+                table.remove(self.members, i)
+                the.app:remove(object)
+                object:die()
+            end
+        end
+    end,
+
     reset = function(self)
         for i = #self.members,1,-1 do
             the.app:remove(self.members[i])
             self.members[i]:die()
             table.remove(self.members, i)
-        end
-        for i = 1, self.count do
-            local m = swarm_member:new()
-            m:init(self)
-            table.insert(self.members, m)
         end
     end,
 }
@@ -54,6 +77,7 @@ swarm_member = Sprite:extend{
     ACCELERATION = 100,
     MAX_SPEED = 250,
 
+    id = 'swarm_member',
     width = 10,
     height = 10,
     solid = true,
@@ -81,7 +105,7 @@ swarm_member = Sprite:extend{
         self.dir = (othervector - myvector):normalized()
         self.dist = myvector:dist(othervector)
 
-        local n = 2000/self.dist
+        local n = 1000/math.max(self.dist,10)
         local accel = self.ACCELERATION * n
         self.acceleration = { x = self.dir.x * accel, y = self.dir.y * accel }
 
@@ -90,19 +114,28 @@ swarm_member = Sprite:extend{
     end,
 
     onCollide = function(self, other, x_overlap, y_overlap)
-        self:displace(other)
+        if other.id == 'asteroid' then
+            self:explode()
+        end
+
+        if other.id == 'swarm_member' then
+            self:displace(other)
+        end
+    end,
+
+    explode = function(self)
+        self.swarm:remove(self)
+        -- TODO Explosion
     end,
 
     onDraw = function(self)
-        love.graphics.push()
-
-        local r = math.max(0,175 - 255 * self.dist/love.graphics.getWidth())
+        local c = math.abs(math.sin((swarm.bpm/60)*math.pi*love.timer.getTime())) * 255 - 255 * self.dist/100
         local bounce = math.sin((swarm.bpm/60)*2*math.pi*love.timer.getTime() + self.offset)*self.width
-        local sway = math.sin((swarm.bpm/60)*2*math.pi*love.timer.getTime() + self.offset*2)*self.width/5
+        local sway = math.sin((swarm.bpm/60)*2*math.pi*love.timer.getTime() * 3 + self.offset)*self.width/5
 
-        love.graphics.setColor(r, r, r)
-        love.graphics.circle("fill", self.x + sway, self.y + bounce, self.width/2)
+        love.graphics.setColor(c, c, c)
+        love.graphics.circle("fill", self.x + sway, self.y + bounce, self.width/2, 5)
 
-        love.graphics.pop()
+        love.graphics.setColor(255,255,255,255)
     end,
 }

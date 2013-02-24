@@ -21,6 +21,9 @@
 
 pointer = Animation:extend{
     image = 'img/crosshair.png',
+
+    id = 'pointer',
+    
     width = 20,
     height = 20,
     solid = false,
@@ -33,5 +36,9 @@ pointer = Animation:extend{
         self.x = love.mouse.getX()
         self.y = love.mouse.getY()
         self.play('default')
+    end,
+
+    onDraw = function(self)
+        love.graphics.setColor(255,255,255,255)
     end,
 }

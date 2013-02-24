@@ -39,6 +39,7 @@ pauseView = View:new {
     end,
 
     onDraw = function(self)
+        love.graphics.setColor(255, 255, 255, 255)
         love.graphics.print('Paused', 50, 50)
     end
 }
