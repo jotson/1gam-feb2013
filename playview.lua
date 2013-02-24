@@ -50,6 +50,11 @@ playView = View:new {
     end,
 
     onDraw = function(self)
+        love.graphics.push()
+
+        love.graphics.setColor(255,255,255,255)
         love.graphics.print('Playing', 50, 50)
+
+        love.graphics.pop()
     end
 }

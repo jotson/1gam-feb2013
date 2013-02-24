@@ -23,6 +23,7 @@ pointer = Animation:extend{
     image = 'img/crosshair.png',
     width = 20,
     height = 20,
+    solid = false,
     sequences = { default = { frames = { 1 }, fps = 10 } },
 
     onNew = function(self)

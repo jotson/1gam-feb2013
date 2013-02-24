@@ -20,10 +20,12 @@
 -- SOFTWARE.
 
 swarm = Sprite:extend{
-    count = 10,
+    count = 100,
     members = {},
     width = 1,
     height = 1,
+    solid = false,
+    bpm = 122, -- beats/minute
 
     onNew = function(self)
         self:reset()
@@ -50,10 +52,12 @@ swarm = Sprite:extend{
 
 swarm_member = Sprite:extend{
     ACCELERATION = 100,
-    MAX_SPEED = 150,
-    MIN_DISTANCE = 10,
+    MAX_SPEED = 250,
+
     width = 10,
     height = 10,
+    solid = true,
+    dist = 0,
 
     init = function(self, swarm)
         self.swarm = swarm
@@ -61,6 +65,8 @@ swarm_member = Sprite:extend{
         self.y = math.random(love.graphics.getHeight())
         self.minVelocity = { x = -self.MAX_SPEED, y = -self.MAX_SPEED }
         self.maxVelocity = { x = self.MAX_SPEED, y = self.MAX_SPEED }
+        self.offset = 0
+        self.offset = math.random()*10
         -- self.drag = { x = self.MAX_SPEED/5, y = self.MAX_SPEED/5 }
     end,
 
@@ -71,27 +77,32 @@ swarm_member = Sprite:extend{
     onUpdate = function(self, dt)
         -- Move towards swarm center
         local othervector = vector(self.swarm.x, self.swarm.y)
-        local myvector = vector(self.x, self.y)
-        local dir = (othervector - myvector):normalized()
-        local dist = myvector:dist(othervector)
-        local accel = 1/dist/love.graphics.getWidth() * self.ACCELERATION/2 + self.ACCELERATION/2
-        self.acceleration = { x = dir.x * accel, y = dir.y * accel }
+        local myvector = vector(self.x - self.width, self.y - self.height)
+        self.dir = (othervector - myvector):normalized()
+        self.dist = myvector:dist(othervector)
 
-        -- Braking
-        if (dist < 100) then
-            local r = dist/100
-            self.minVelocity = { x = -self.MAX_SPEED*r, y = -self.MAX_SPEED*r }
-            self.maxVelocity = { x = self.MAX_SPEED*r, y = self.MAX_SPEED*r }
-        end
+        local n = 2000/self.dist
+        local accel = self.ACCELERATION * n
+        self.acceleration = { x = self.dir.x * accel, y = self.dir.y * accel }
 
         -- Collision detection to keep minimum distance from other members
+        self:collide(the.app.view)
+    end,
+
+    onCollide = function(self, other, x_overlap, y_overlap)
+        self:displace(other)
     end,
 
     onDraw = function(self)
-        -- TODO: Replace with animated sprite
         love.graphics.push()
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.circle("fill", self.x, self.y, self.width)
+
+        local r = math.max(0,175 - 255 * self.dist/love.graphics.getWidth())
+        local bounce = math.sin((swarm.bpm/60)*2*math.pi*love.timer.getTime() + self.offset)*self.width
+        local sway = math.sin((swarm.bpm/60)*2*math.pi*love.timer.getTime() + self.offset*2)*self.width/5
+
+        love.graphics.setColor(r, r, r)
+        love.graphics.circle("fill", self.x + sway, self.y + bounce, self.width/2)
+
         love.graphics.pop()
     end,
 }
