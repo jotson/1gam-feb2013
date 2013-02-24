@@ -20,6 +20,8 @@
 -- SOFTWARE.
 
 startView = View:new {
+    id = 'startview',
+    
     reset = function(self)
     end,
 

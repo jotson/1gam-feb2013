@@ -20,6 +20,8 @@
 -- SOFTWARE.
 
 gameoverView = View:new {
+    id = 'gameoverview',
+    
     reset = function(self)
     end,
 

@@ -27,6 +27,7 @@ require 'startview'
 require 'playview'
 require 'pauseview'
 require 'gameoverview'
+vector = require 'vector'
 
 the.app = App:new{
     STATE_START = 1,

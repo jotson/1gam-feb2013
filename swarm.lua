@@ -22,51 +22,76 @@
 swarm = Sprite:extend{
     count = 10,
     members = {},
+    width = 1,
+    height = 1,
 
     onNew = function(self)
+        self:reset()
+    end,
+
+    onUpdate = function(self)
+        self.x = love.mouse.getX()
+        self.y = love.mouse.getY()
+    end,
+
+    reset = function(self)
+        for i = #self.members,1,-1 do
+            the.app:remove(self.members[i])
+            self.members[i]:die()
+            table.remove(self.members, i)
+        end
         for i = 1, self.count do
             local m = swarm_member:new()
             m:init(self)
             table.insert(self.members, m)
         end
-        the.view:add(self)
-    end,
-
-    onUpdate = function(self)
-        -- TODO Calculate center of swarm
-        
-        -- PLACEHOLDER:
-        self.x = love.mouse.getX()
-        self.y = love.mouse.getY()
     end,
 }
 
 swarm_member = Sprite:extend{
+    ACCELERATION = 100,
+    MAX_SPEED = 150,
+    MIN_DISTANCE = 10,
+    width = 10,
+    height = 10,
+
     init = function(self, swarm)
         self.swarm = swarm
-        self.x = swarm.x + math.random(100) - 50
-        self.y = swarm.y + math.random(100) - 50
+        self.x = math.random(love.graphics.getWidth())
+        self.y = math.random(love.graphics.getHeight())
+        self.minVelocity = { x = -self.MAX_SPEED, y = -self.MAX_SPEED }
+        self.maxVelocity = { x = self.MAX_SPEED, y = self.MAX_SPEED }
+        -- self.drag = { x = self.MAX_SPEED/5, y = self.MAX_SPEED/5 }
     end,
 
     onNew = function(self, swarm)
-        the.view:add(self)
+        the.app:add(self)
     end,
 
     onUpdate = function(self, dt)
-        -- TODO Swarming behavior
-        -- TODO Go towards swarm center
-        -- TODO Keep minimum distance from other members
+        -- Move towards swarm center
+        local othervector = vector(self.swarm.x, self.swarm.y)
+        local myvector = vector(self.x, self.y)
+        local dir = (othervector - myvector):normalized()
+        local dist = myvector:dist(othervector)
+        local accel = 1/dist/love.graphics.getWidth() * self.ACCELERATION/2 + self.ACCELERATION/2
+        self.acceleration = { x = dir.x * accel, y = dir.y * accel }
 
-        -- PLACEHOLDER:
-        self.x = self.swarm.x + math.random(100) - 50
-        self.y = self.swarm.y + math.random(100) - 50
+        -- Braking
+        if (dist < 100) then
+            local r = dist/100
+            self.minVelocity = { x = -self.MAX_SPEED*r, y = -self.MAX_SPEED*r }
+            self.maxVelocity = { x = self.MAX_SPEED*r, y = self.MAX_SPEED*r }
+        end
+
+        -- Collision detection to keep minimum distance from other members
     end,
 
     onDraw = function(self)
         -- TODO: Replace with animated sprite
         love.graphics.push()
         love.graphics.setColor(255, 255, 255)
-        love.graphics.circle("fill", self.x, self.y, 10)
+        love.graphics.circle("fill", self.x, self.y, self.width)
         love.graphics.pop()
     end,
 }

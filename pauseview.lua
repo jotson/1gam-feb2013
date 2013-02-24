@@ -20,6 +20,8 @@
 -- SOFTWARE.
 
 pauseView = View:new {
+    id = 'pauseview',
+
     reset = function(self)
     end,
 

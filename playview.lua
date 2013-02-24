@@ -23,12 +23,24 @@ require 'pointer'
 require 'swarm'
 
 playView = View:new {
+    id = 'playview',
+
     reset = function(self)
+        if (not self.swarm) then
+            self.swarm = swarm:new()
+            the.app:add(self.swarm)
+        else
+            self.swarm:reset()
+        end
+
+        if (self.pointer) then
+            self:remove(self.pointer)
+        end
+        self.pointer = pointer:new()
+        the.app:add(self.pointer)
     end,
 
     onNew = function(self)
-        self.pointer = pointer:new()
-        self.swarm = swarm:new()
     end,
     
     onUpdate = function(self, dt)

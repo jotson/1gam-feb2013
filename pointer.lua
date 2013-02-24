@@ -26,7 +26,6 @@ pointer = Animation:extend{
     sequences = { default = { frames = { 1 }, fps = 10 } },
 
     onNew = function(self)
-        the.view:add(self)
     end,
 
     onUpdate = function(self, dt)
