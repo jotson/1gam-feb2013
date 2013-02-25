@@ -136,6 +136,17 @@ playView = View:extend {
             the.app:add(b)
         end
 
+        -- Message
+        self:add(Text:new{
+            x = 0,
+            y = 10,
+            align="center",
+            width = love.graphics.getWidth(),
+            font = { "fnt/visitor1.ttf", 24 },
+            text = "Protect " .. the.app.city .. "!",
+            tint = { 1, 0, 0 }
+        })
+
         -- Create swarm
         self.swarm = swarm:new()
         the.app:add(self.swarm)

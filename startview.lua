@@ -23,33 +23,79 @@ startView = View:extend {
     id = 'startview',
     
     onNew = function(self)
+        self:add(Animation:new{width = love.graphics.getWidth(), height = love.graphics.getHeight(), image = 'img/title-screen.png'})
+
         self.city = TextInput:new{
-            width = 300,
-            height = 50,
-            x = 50,
-            y = 50
+            width = 150,
+            x = 325,
+            y = 240,
+            text = '',
+            font = { 'fnt/visitor1.ttf', 24 },
+            tint = { 0, 0.8, 0 },
+            wordWrap = false,
+            align = 'left'
         }
 
-        the.app:add(self.city)
+        self:add(self.city)
+
+        self:add(
+            Button:new{
+                label = nil,
+                background = Animation:new{ width = 100, height = 50, image = 'img/play-button.png', tint = { 0.75, 0.75, 0.75 } },
+                x = 275,
+                y = 300,
+
+                onMouseEnter = function(self)
+                    self.background.tint = { 1, 1, 1 }
+                end,
+
+                onMouseExit = function(self)
+                    self.background.tint = { 0.75, 0.75, 0.75 }
+                end,
+
+                onMouseUp = function(self)
+                    if string.len(the.app.startView.city.text) > 0 then
+                        the.app.city = the.app.startView.city.text
+                    else
+                        the.app.city = 'your home town'
+                    end
+                    the.app:changeState(the.app.STATE_PLAYING)
+                end
+            }
+        )
+
+        self:add(
+            Button:new{
+                label = nil,
+                background = Animation:new{ width = 100, height = 50, image = 'img/quit-button.png', tint = { 0.75, 0.75, 0.75 } },
+                x = 425,
+                y = 300,
+
+                onMouseEnter = function(self)
+                    self.background.tint = { 1, 1, 1 }
+                end,
+
+                onMouseExit = function(self)
+                    self.background.tint = { 0.75, 0.75, 0.75 }
+                end,
+
+                onMouseUp = function(self)
+                    love.event.push("quit")
+                end
+            }
+        )
     end,
     
     onUpdate = function(self, dt)
-        if the.keys:justPressed('escape') then
-            love.event.push("quit")
-        end
-
-        if the.keys:justPressed(' ') then
-            the.app:changeState(the.app.STATE_PLAYING)
-        end
     end,
 
     onDraw = function(self)
-        local blink_factor = math.abs(math.sin(the.app.beat.timer_radians*2))
-        local start = love.graphics.getHeight() * 0.8;
+        love.graphics.setFont(the.app.font)
+        love.graphics.setColor(255, 255, 255, 255)
 
-        love.graphics.setColor(255, 255, 255, blink_factor*200+55)
-        love.graphics.printf("[SPACE] TO START", 0, start, love.graphics.getWidth(), "center")
-        love.graphics.printf("[ESC] TO QUIT", 0, start + 40, love.graphics.getWidth(), "center")
+        love.graphics.printf('--' .. the.app.name .. "--\nby John Watson\nFebruary 2013", 0, 50, love.graphics.getWidth(), "center")
+        love.graphics.printf("The sky is falling!\nQuick! Use the meteor shield!\nWhat is the name of your city?", 0, 150, love.graphics.getWidth(), "center")
+
         love.graphics.setColor(255, 255, 255, 255)
     end
 }

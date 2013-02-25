@@ -39,6 +39,10 @@ pauseView = View:extend {
         the.app.playView:draw()
         
         love.graphics.setColor(255, 255, 255, 255)
+        love.graphics.setFont(the.app.font)
+        
         love.graphics.print('Paused\n\nPress Space to continue, ESC to quit', 50, 50)
+        
+        love.graphics.setColor(255, 255, 255, 255)
     end
 }

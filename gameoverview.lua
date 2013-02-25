@@ -21,7 +21,58 @@
 
 gameoverView = View:extend {
     id = 'gameoverview',
-    
+
+    onNew = function(self)
+        self:add(Fill:new{ width = love.graphics.getWidth(), height = love.graphics.getHeight(), fill = { 255, 255, 255} })
+
+        self:add(
+            Button:new{
+                label = nil,
+                background = Animation:new{ width = 100, height = 50, image = 'img/play-button.png', tint = { 0.75, 0.75, 0.75 } },
+                x = 275,
+                y = 300,
+
+                onMouseEnter = function(self)
+                    self.background.tint = { 1, 1, 1 }
+                end,
+
+                onMouseExit = function(self)
+                    self.background.tint = { 0.75, 0.75, 0.75 }
+                end,
+
+                onMouseUp = function(self)
+                    if string.len(the.app.startView.city.text) > 0 then
+                        the.app.city = the.app.startView.city.text
+                    else
+                        the.app.city = 'your home town'
+                    end
+                    the.app:changeState(the.app.STATE_START)
+                end
+            }
+        )
+
+        self:add(
+            Button:new{
+                label = nil,
+                background = Animation:new{ width = 100, height = 50, image = 'img/quit-button.png', tint = { 0.75, 0.75, 0.75 } },
+                x = 425,
+                y = 300,
+
+                onMouseEnter = function(self)
+                    self.background.tint = { 1, 1, 1 }
+                end,
+
+                onMouseExit = function(self)
+                    self.background.tint = { 0.75, 0.75, 0.75 }
+                end,
+
+                onMouseUp = function(self)
+                    love.event.push("quit")
+                end
+            }
+        )
+    end,
+
     onUpdate = function(self, dt)
         if the.keys:justPressed(' ') then
             the.app:changeState(the.app.STATE_START)
@@ -29,15 +80,14 @@ gameoverView = View:extend {
     end,
 
     onDraw = function(self)
-        love.graphics.setColor(255, 255, 255, 255)
-        love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
-
         love.graphics.setColor(0, 0, 0, 255)
+        love.graphics.setFont(the.app.font)
+
         love.graphics.printf(
-            'The city was destroyed. :-(\n\n'
+            the.app.city .. ' was destroyed. :-(\n\n'
             ..'You survived for ' .. the.app.score.days .. ' days.\n'
             ..'You blocked ' .. the.app.score.hit ..' meteors and missed ' .. the.app.score.missed .. '.'
-            , 0, love.graphics.getHeight()/2-50, love.graphics.getWidth(), 'center')
+            , 0, 150, love.graphics.getWidth(), 'center')
         
         love.graphics.setColor(255, 255, 255, 255)
     end

@@ -53,6 +53,8 @@ the.app = App:new{
         self.music:setLooping(true)
         self.music:play()
 
+        the.app.font = love.graphics.newFont('fnt/visitor1.ttf', 24)
+
         self:changeState(self.STATE_START)
     end,
 
