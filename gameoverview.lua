@@ -19,7 +19,7 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-gameoverView = View:new {
+gameoverView = View:extend {
     id = 'gameoverview',
     
     onUpdate = function(self, dt)

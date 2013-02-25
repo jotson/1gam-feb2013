@@ -58,13 +58,19 @@ the.app = App:new{
 
     changeState = function(self, state)
         if state == self.STATE_START then
+            if not self.startView then
+                self.startView = startView:new()
+            end
             love.mouse.setVisible(true)
-            self.view = startView
+            self.view = self.startView
         end
 
         if state == self.STATE_PAUSED then
+            if not self.pauseView then
+                self.pauseView = pauseView:new()
+            end
             love.mouse.setVisible(true)
-            self.view = pauseView
+            self.view = self.pauseView
         end
 
         if state == self.STATE_PLAYING then
@@ -79,8 +85,11 @@ the.app = App:new{
         end
 
         if state == self.STATE_GAMEOVER then
+            if not self.gameoverView then
+                self.gameoverView = gameoverView:new()
+            end
             love.mouse.setVisible(true)
-            self.view = gameoverView
+            self.view = self.gameoverView
         end
 
         self.state = state

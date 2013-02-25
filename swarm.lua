@@ -118,17 +118,12 @@ swarm_member = Sprite:extend{
     onCollide = function(self, other, x_overlap, y_overlap)
         if other.id == 'asteroid' then
             the.app.score.hit = the.app.score.hit + 1
-            self:explode()
+            self.swarm:remove(self)
         end
 
         if other.id == 'swarm_member' then
             self:displace(other)
         end
-    end,
-
-    explode = function(self)
-        self.swarm:remove(self)
-        -- TODO Explosion
     end,
 
     onDraw = function(self)

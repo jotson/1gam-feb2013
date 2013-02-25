@@ -19,7 +19,7 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-pauseView = View:new {
+pauseView = View:extend {
     id = 'pauseview',
 
     onNew = function(self)

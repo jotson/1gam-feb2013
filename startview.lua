@@ -19,10 +19,18 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-startView = View:new {
+startView = View:extend {
     id = 'startview',
     
     onNew = function(self)
+        self.city = TextInput:new{
+            width = 300,
+            height = 50,
+            x = 50,
+            y = 50
+        }
+
+        the.app:add(self.city)
     end,
     
     onUpdate = function(self, dt)
