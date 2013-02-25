@@ -19,8 +19,8 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-DEBUG = true
-STRICT = true
+DEBUG = false
+STRICT = false
 
 require 'zoetrope'
 require 'startview'
@@ -40,12 +40,12 @@ the.app = App:new{
     BPM = 61, -- Beats/minute
     beat = {},
 
-    name = "Asteroid Defense",
+    name = "Meteor Defense",
 
     timer = 0,
     timer_radians = 0,
 
-    score = { hit = 0, missed = 0 },
+    score = { hit = 0, missed = 0, days = 0 },
 
     onRun = function(self)
         -- Load audio, font, graphics

@@ -59,7 +59,9 @@ building = Animation:extend{
     end,
 
     onCollide = function(self, other, x_overlap, y_overlap)
-        the.app.score.missed = the.app.score.missed + 1
+        if other.id == 'asteroid' then
+            the.app.score.missed = the.app.score.missed + 1
+        end
 
         if other.id == 'asteroid' and self.hp > 0 then
             if other.original_size == asteroid.EXTINCTION_ROCK then

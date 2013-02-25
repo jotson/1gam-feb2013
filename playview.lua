@@ -32,16 +32,103 @@ playView = View:extend {
     ending = false,
 
     init = function(self)
-        -- Sky
-        the.app:add(
-            Fill:new{
-                id = 'sky',
-                width = love.graphics.getWidth(),
-                height = love.graphics.getHeight(),
-                fill = {50, 150, 255},
-                solid = false,
-            }
-        )
+        -- Stop running timers so they don't accumulate
+        self.timer:stop()
+
+        -- Day/night cycle
+        self.sky_day = Animation:new{
+            id = 'sky',
+            image = 'img/sky-day.png',
+            alpha = 1,
+            width = love.graphics.getWidth(),
+            height = love.graphics.getHeight(),
+
+            start = function(self)
+                the.app.score.days = the.app.score.days + 1
+                self.alpha = 0
+                the.app.playView.tween:start(self, 'alpha', 1, 10, 'linear')
+                the.app.playView.tween:start(the.app.playView.sky_dawn, 'alpha', 0, 10, 'linear')
+                the.app.playView.timer:after(25, function() the.app.playView.sky_dusk:start() end)
+            end,
+        }
+        self.sky_dusk = Animation:new{
+            id = 'sky',
+            image = 'img/sky-dusk.png',
+            alpha = 0,
+            width = love.graphics.getWidth(),
+            height = love.graphics.getHeight(),
+
+            start = function(self)
+                self.alpha = 0
+                the.app.playView.tween:start(self, 'alpha', 1, 5, 'linear')
+                the.app.playView.tween:start(the.app.playView.sky_day, 'alpha', 0, 5, 'linear')
+                the.app.playView.timer:after(5, function() the.app.playView.sky_night:start() end)
+            end,
+        }
+        self.sky_night = Animation:new{
+            id = 'sky',
+            image = 'img/sky-night.png',
+            alpha = 0,
+            width = love.graphics.getWidth(),
+            height = love.graphics.getHeight(),
+            stars = {},
+
+            onNew = function(self)
+                for i = 1, 2000 do
+                    table.insert(self.stars,
+                        {
+                            x = math.random(love.graphics.getWidth()*4)-love.graphics.getWidth()*2,
+                            y = math.random(love.graphics.getHeight()*4)-love.graphics.getHeight()*2,
+                            r = math.random(2)
+                        }
+                    )
+                end
+            end,
+
+            start = function(self)
+                self.alpha = 0
+                the.app.playView.tween:start(self, 'alpha', 1, 10, 'linear')
+                the.app.playView.tween:start(the.app.playView.sky_dusk, 'alpha', 0, 10, 'linear')
+                the.app.playView.timer:after(25, function() the.app.playView.sky_dawn:start() end)
+            end,
+
+            onDraw = function(self)
+                love.graphics.push()
+
+                love.graphics.translate(love.graphics.getWidth()*1.5, love.graphics.getHeight())
+                love.graphics.rotate(the.app.playView.gametime * math.pi * 2 / 25)
+                for i = 1, #self.stars do
+                    love.graphics.setColor(255, 255, 255, math.random() * self.alpha * 255)
+                    local x = self.stars[i].x
+                    local y = self.stars[i].y
+                    local r = self.stars[i].r
+                    love.graphics.circle('fill', x, y, r)
+                end
+
+                love.graphics.pop()
+
+                love.graphics.setColor(255, 255, 255, 255)
+            end
+        }
+        self.sky_dawn = Animation:new{
+            id = 'sky',
+            image = 'img/sky-dawn.png',
+            alpha = 0,
+            width = love.graphics.getWidth(),
+            height = love.graphics.getHeight(),
+
+            start = function(self)
+                self.alpha = 0
+                the.app.playView.tween:start(self, 'alpha', 1, 5, 'linear')
+                the.app.playView.tween:start(the.app.playView.sky_night, 'alpha', 0, 5, 'linear')
+                the.app.playView.timer:after(5, function() the.app.playView.sky_day:start() end)
+            end,
+        }
+        the.app:add(self.sky_day)
+        the.app:add(self.sky_dusk)
+        the.app:add(self.sky_night)
+        the.app:add(self.sky_dawn)
+        self.timer:after(5, function() self.sky_dusk:start() end)
 
         -- Build city
         for i = 1, math.ceil(love.graphics.getWidth()/building.width) do
@@ -59,10 +146,12 @@ playView = View:extend {
         the.app:add(self.pointer)
 
         -- Setup timers
-        -- Stop running timers so they don't accumulate
-        self.timer:stop()
         self.timer:every(1/the.app.beat.beats_per_second, function() self.swarm:addMember(1, love.graphics.getWidth()/2, GROUND_HEIGHT) end)
         self.timer:every(1/the.app.beat.beats_per_second, function() self:launchAsteroid() end)
+    end,
+
+    startDay = function(self)
+        the.app.score.days = the.app.score.days + 1
     end,
 
     launchAsteroid = function(self)

@@ -33,7 +33,11 @@ gameoverView = View:extend {
         love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
 
         love.graphics.setColor(0, 0, 0, 255)
-        love.graphics.printf('GAME OVER', 0, love.graphics.getHeight()/2-20, love.graphics.getWidth(), 'center')
+        love.graphics.printf(
+            'The city was destroyed. :-(\n\n'
+            ..'You survived for ' .. the.app.score.days .. ' days.\n'
+            ..'You blocked ' .. the.app.score.hit ..' meteors and missed ' .. the.app.score.missed .. '.'
+            , 0, love.graphics.getHeight()/2-50, love.graphics.getWidth(), 'center')
         
         love.graphics.setColor(255, 255, 255, 255)
     end

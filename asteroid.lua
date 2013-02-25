@@ -21,7 +21,7 @@
 
 asteroid = Sprite:extend{
     MAX_VELOCITY_X = 25,
-    MAX_VELOCITY_Y = 60,
+    MAX_VELOCITY_Y = 30,
 
     BIG_ROCK = 25,
     GIANT_ROCK = 50,
@@ -48,7 +48,7 @@ asteroid = Sprite:extend{
         self.height = self.size
         self.velocity = {
             x = math.random() * self.MAX_VELOCITY_X*2 - self.MAX_VELOCITY_X,
-            y = math.random() * self.MAX_VELOCITY_Y + 10,
+            y = self.MAX_VELOCITY_Y,
             rotation = math.random() * 20 - 10
         }
         self.acceleration.y = 10
@@ -65,7 +65,6 @@ asteroid = Sprite:extend{
         -- Changes for big asteroids        
         if self.size >= self.BIG_ROCK then
             self.velocity.x = self.velocity.x * 0.25
-            self.velocity.y = self.velocity.y * 0.5
             self.velocity.rotation = self.velocity.rotation * 0.1
             self.fireTrail.emitCount = 2
         end
@@ -74,7 +73,6 @@ asteroid = Sprite:extend{
             self.x = love.graphics.getWidth()/2
             self.velocity = {
                 x = 0,
-                y = 50,
                 rotation = 1
             }
         end
@@ -106,6 +104,7 @@ asteroid = Sprite:extend{
             self.width = self.size
             self.height = self.size
             if self.size <= 1 then
+                the.app.score.hit = the.app.score.hit + 1
                 self:explodeAndDie()
             else
                 self:explode()
