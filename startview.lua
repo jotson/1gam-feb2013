@@ -22,9 +22,6 @@
 startView = View:new {
     id = 'startview',
     
-    reset = function(self)
-    end,
-
     onNew = function(self)
     end,
     

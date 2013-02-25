@@ -19,17 +19,41 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-gameoverView = View:new {
-    id = 'gameoverview',
+building_img = {
+    'img/apartment01.png',
+    'img/apartment02.png',
+    'img/apartment03.png',
+    'img/apartment04.png',
+    'img/club01.png',
+    'img/park01.png',
+    'img/policestation01.png',
+    'img/restaurant01.png',
+}
+
+road_img = {
+    'img/verticalroad01.png',
+    'img/verticalroad01b.png',
+    'img/verticalroad01c.png',
+    'img/verticalroad01d.png'
+}
+
+building = Animation:extend{
+    id = 'building',
     
+    width = 100,
+    height = 175,
+    solid = false,
+    sequences = { default = { frames = { 1 }, fps = 1 } },
+
+    onNew = function(self)
+        self.image = building_img[math.random(#building_img)]
+        self.y = love.graphics.getHeight() - self.height
+    end,
+
     onUpdate = function(self, dt)
-        if the.keys:justPressed(' ') then
-            the.app:changeState(the.app.STATE_START)
-        end
     end,
 
     onDraw = function(self)
-        love.graphics.setColor(255, 255, 255, 255)
-        love.graphics.print('Game over', 50, 50)
-    end
+        love.graphics.setColor(255,255,255,255)
+    end,
 }

@@ -27,6 +27,7 @@ require 'startview'
 require 'playview'
 require 'pauseview'
 require 'gameoverview'
+require 'particles'
 vector = require 'vector'
 
 the.app = App:new{
@@ -43,32 +44,34 @@ the.app = App:new{
         self.music:setLooping(true)
         self.music:play()
 
-        love.mouse.setVisible(false)
-
         self:changeState(self.STATE_START)
     end,
 
     changeState = function(self, state)
         if state == self.STATE_START then
+            love.mouse.setVisible(true)
             self.view = startView
-            self.view:reset()
         end
 
         if state == self.STATE_PAUSED then
+            love.mouse.setVisible(true)
             self.view = pauseView
-            self.view:reset()
         end
 
         if state == self.STATE_PLAYING then
-            self.view = playView
+            love.mouse.setVisible(false)
             if self.state == self.STATE_START then
-                self.view:reset()
+                self.playView = playView:new()
+            end
+            self.view = self.playView
+            if self.state == self.STATE_START then
+                self.playView:init()
             end
         end
 
         if state == self.STATE_GAMEOVER then
+            love.mouse.setVisible(true)
             self.view = gameoverView
-            self.view:reset()
         end
 
         self.state = state

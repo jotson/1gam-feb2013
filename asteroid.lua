@@ -34,6 +34,9 @@ asteroid = Sprite:extend{
     solid = true,
 
     onNew = function(self)
+        self.explosion_snd = love.audio.newSource('snd/explosion.ogg', 'static')
+        self.explosion_snd:setLooping(false)
+
         self.y = -10
         self.x = math.random(love.graphics.getWidth())
         self.size = 5
@@ -47,13 +50,25 @@ asteroid = Sprite:extend{
             y = math.random() * self.MAX_VELOCITY_Y + 10,
             rotation = math.random() * 20 - 10
         }
+
+        -- Fire and smoke
+        self.fireTrail = fireEmitter:new()
+        self.fireTrail:setup(self)
+        self.fireTrail:loadParticles(fire, 100)
+        the.app:add(self.fireTrail)
+
+        -- Changes for big asteroids        
         if self.size == self.BIG_ROCK then
             self.velocity.x = self.velocity.x * 0.25
             self.velocity.rotation = self.velocity.rotation * 0.25
+            self.fireTrail.emitCount = 2
         end
     end,
 
     onUpdate = function(self, dt)
+        if self.y > GROUND_HEIGHT then
+            self:explodeAndDie()
+        end
     end,
 
     onDraw = function(self)
@@ -65,9 +80,9 @@ asteroid = Sprite:extend{
         love.graphics.rotate(self.rotation)
         love.graphics.circle('fill', 0, 0, self.size * self.scale, 5)
 
-        love.graphics.setColor(255, 255, 255, 255)
-
         love.graphics.pop()
+
+        love.graphics.setColor(255, 255, 255, 255)
     end,
 
     onCollide = function(self, other, x_overlap, y_overlap)
@@ -76,14 +91,34 @@ asteroid = Sprite:extend{
             self.width = self.size
             self.height = self.size
             if self.size <= 1 then
+                self:explodeAndDie()
+            else
                 self:explode()
             end
         end
     end,
 
     explode = function(self)
-        -- TODO Explosion
+        self.explosion_snd:play()
+
+        the.app.view:flash({255,255,255}, 0.25)
+
+        local explosion = explosionEmitter:new()
+        explosion.x = self.x
+        explosion.y = self.y
+        explosion:loadParticles(explosionParticle, 25)
+        explosion:explode()
+        the.app:add(explosion)
+        the.app.view.timer:after(EXPLOSION_LIFE, function() the.app:remove(explosion) end)
+    end,
+
+    explodeAndDie = function(self)
+        self:explode()
+        
         self:die()
         the.app:remove(self)
+
+        self.fireTrail.emitting = false
+        the.app.view.timer:after(FIRE_LIFE, function() the.app:remove(self.fireTrail) end)
     end,
 }

@@ -22,27 +22,44 @@
 require 'pointer'
 require 'swarm'
 require 'asteroid'
+require 'building'
 
-playView = View:new {
+GROUND_HEIGHT = 500
+
+playView = View:extend {
     id = 'playview',
 
-    reset = function(self)
-        if not self.swarm then
-            self.swarm = swarm:new()
-            the.app:add(self.swarm)
-        else
-            self.swarm:reset()
-        end
+    init = function(self)
+        -- Sky
+        the.app:add(
+            Fill:new{
+                id = 'sky',
+                width = love.graphics.getWidth(),
+                height = love.graphics.getHeight(),
+                fill = {50, 150, 255},
+                solid = false,
+            }
+        )
+
+        -- Create swarm
+        self.swarm = swarm:new()
+        the.app:add(self.swarm)
         self.swarm:addMember(10)
-        self.timer:every(1, function() self.swarm:addMember(1, 700, 450) end)
 
-        self.timer:every(1, function() self:launchAsteroid() end)
-
-        if self.pointer then
-            self:remove(self.pointer)
+        -- Build city
+        for i = 0, math.ceil(love.graphics.getWidth()/building.width) do
+            the.app:add(building:new({ x = building.width * i }))
         end
+
+        -- Add pointer
         self.pointer = pointer:new()
         the.app:add(self.pointer)
+
+        -- Setup timers
+        -- Stop running timers so they don't accumulate
+        self.timer:stop()
+        self.timer:every(1, function() self.swarm:addMember(1, love.graphics.getWidth()/2, GROUND_HEIGHT) end)
+        self.timer:every(1, function() self:launchAsteroid() end)
     end,
 
     launchAsteroid = function(self)

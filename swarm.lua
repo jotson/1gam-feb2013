@@ -20,7 +20,7 @@
 -- SOFTWARE.
 
 swarm = Sprite:extend{
-    MAX_MEMBERS = 100,
+    MAX_MEMBERS = 50,
 
     id = 'swarm',
     members = {},
@@ -82,6 +82,7 @@ swarm_member = Sprite:extend{
     height = 10,
     solid = true,
     dist = 0,
+    t = 0,
 
     init = function(self, swarm)
         self.swarm = swarm
@@ -99,6 +100,9 @@ swarm_member = Sprite:extend{
     end,
 
     onUpdate = function(self, dt)
+        -- Update timer
+        self.t = (swarm.bpm/60)*2*math.pi*love.timer.getTime();
+
         -- Move towards swarm center
         local othervector = vector(self.swarm.x, self.swarm.y)
         local myvector = vector(self.x - self.width, self.y - self.height)
@@ -129,9 +133,9 @@ swarm_member = Sprite:extend{
     end,
 
     onDraw = function(self)
-        local c = math.abs(math.sin((swarm.bpm/60)*math.pi*love.timer.getTime())) * 255 - 255 * self.dist/100
-        local bounce = math.sin((swarm.bpm/60)*2*math.pi*love.timer.getTime() + self.offset)*self.width
-        local sway = math.sin((swarm.bpm/60)*2*math.pi*love.timer.getTime() * 3 + self.offset)*self.width/5
+        local c = math.abs(math.sin(self.t/2)) * 255 - 255 * self.dist/100
+        local bounce = math.sin(self.t + self.offset)*self.width
+        local sway = math.sin(self.t * 3 + self.offset)*self.width/5
 
         love.graphics.setColor(c, c, c)
         love.graphics.circle("fill", self.x + sway, self.y + bounce, self.width/2, 5)
