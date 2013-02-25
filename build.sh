@@ -2,7 +2,7 @@
 
 # Based on https://github.com/OneGameAMonth/Rogue-Beach-CA/blob/master/build.sh
 # Configure this, and also ensure you have the build/osx.patch ready.
-NAME="game-1gam-johnwatson"
+NAME="meteordefense-johnwatson"
 EXENAME="game"
 
 # Version is {last tag}-{commits since last tag}.
