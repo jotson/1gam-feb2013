@@ -89,7 +89,9 @@ swarm_member = Sprite:extend{
         self.y = math.random(love.graphics.getHeight())
         self.minVelocity = { x = -self.MAX_SPEED, y = -self.MAX_SPEED }
         self.maxVelocity = { x = self.MAX_SPEED, y = self.MAX_SPEED }
-        self.offset = math.pi/4 * math.random(0,8)
+        self.offset = 0
+        -- self.offset = math.pi * math.random(0,1)
+        -- self.offset = math.pi/4 * math.random(0,8)
         -- self.drag = { x = self.MAX_SPEED/5, y = self.MAX_SPEED/5 }
     end,
 
