@@ -117,6 +117,7 @@ swarm_member = Sprite:extend{
 
     onCollide = function(self, other, x_overlap, y_overlap)
         if other.id == 'asteroid' then
+            the.app.score.hit = the.app.score.hit + 1
             self:explode()
         end
 

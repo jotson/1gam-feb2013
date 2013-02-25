@@ -68,9 +68,12 @@ playView = View:extend {
     launchAsteroid = function(self)
         local r = math.random(1000)
         local size = asteroid.MIN_SIZE
-        if r > 950 then
+
+        local difficulty = self.gametime/1
+        if r > 990 - difficulty then
             size = asteroid.BIG_ROCK
-        elseif r > 990 then
+        end
+        if r > 1000 - difficulty then
             size = asteroid.GIANT_ROCK
         end
         -- if self.gametime > 5 then

@@ -45,7 +45,6 @@ building = Animation:extend{
     width = 100,
     height = 175,
     solid = true,
-    sequences = { default = { frames = { 1 }, fps = 1 } },
 
     onNew = function(self)
         self.image = building_img[math.random(#building_img)]
@@ -60,6 +59,8 @@ building = Animation:extend{
     end,
 
     onCollide = function(self, other, x_overlap, y_overlap)
+        the.app.score.missed = the.app.score.missed + 1
+
         if other.id == 'asteroid' and self.hp > 0 then
             if other.original_size == asteroid.EXTINCTION_ROCK then
                 the.app:changeState(the.app.STATE_GAMEOVER)
@@ -80,7 +81,7 @@ building = Animation:extend{
                     offset = 0
                 end
                 local e = smokeEmitter:new()
-                e.period = 1/(the.app.beat.beats_per_second*4)
+                e.period = 1/the.app.beat.beats_per_second/4
                 e.x = other.x + offset
                 e.y = other.y + math.random() * 50
                 e:loadParticles(smoke, 20)

@@ -108,11 +108,13 @@ smokeEmitter = Emitter:extend{
     emitCount = 1,
 }
 
-smoke = Fill:extend{
+-- smoke = Fill:extend{
+smoke = Animation:extend{
     id = 'smoke_particle',
 
-    fill = {255, 255, 255},
+    image = 'img/smoke.png',
     solid = false,
+    fill = {255, 255, 255},
 
     onEmit = function (self)
         local v = math.random()
@@ -120,13 +122,13 @@ smoke = Fill:extend{
         self.width = 10
         self.height = self.width
         self.alpha = 0.8
-        self.scale = 1
+        self.scale = 2
         self.velocity.y = -30
         self.velocity.x = 0
         self.acceleration.x = 4
 
         local t = SMOKE_LIFE
-        the.view.tween:start(self, 'scale', self.scale*2, t)
+        the.view.tween:start(self, 'scale', self.scale*3, t)
         the.view.tween
             :start(self, 'alpha', 0, t)
             :andThen(function() self:die() end)

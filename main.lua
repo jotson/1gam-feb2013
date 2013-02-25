@@ -45,6 +45,8 @@ the.app = App:new{
     timer = 0,
     timer_radians = 0,
 
+    score = { hit = 0, missed = 0 },
+
     onRun = function(self)
         -- Load audio, font, graphics
         self.music = love.audio.newSource('snd/music.mp3', 'stream')
@@ -86,7 +88,7 @@ the.app = App:new{
 
     onUpdate = function(self, dt)
         self.elapsed = self.elapsed + dt
-        
+
         self.beat.beats_per_minute = self.BPM
         self.beat.beats_per_second = self.BPM/60
         self.beat.radians_per_beat = math.pi

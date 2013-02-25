@@ -27,7 +27,6 @@ pointer = Animation:extend{
     width = 20,
     height = 20,
     solid = false,
-    sequences = { default = { frames = { 1 }, fps = 1 } },
 
     onNew = function(self)
     end,
