@@ -27,7 +27,6 @@ swarm = Sprite:extend{
     width = 1,
     height = 1,
     solid = false,
-    bpm = 122, -- beats/minute
 
     onNew = function(self)
         self:reset()
@@ -90,8 +89,7 @@ swarm_member = Sprite:extend{
         self.y = math.random(love.graphics.getHeight())
         self.minVelocity = { x = -self.MAX_SPEED, y = -self.MAX_SPEED }
         self.maxVelocity = { x = self.MAX_SPEED, y = self.MAX_SPEED }
-        self.offset = 0
-        self.offset = math.random()*10
+        self.offset = math.pi/4 * math.random(0,8)
         -- self.drag = { x = self.MAX_SPEED/5, y = self.MAX_SPEED/5 }
     end,
 
@@ -101,7 +99,7 @@ swarm_member = Sprite:extend{
 
     onUpdate = function(self, dt)
         -- Update timer
-        self.t = (swarm.bpm/60)*2*math.pi*love.timer.getTime();
+        self.t = the.app.beat.timer_radians;
 
         -- Move towards swarm center
         local othervector = vector(self.swarm.x, self.swarm.y)
@@ -133,9 +131,9 @@ swarm_member = Sprite:extend{
     end,
 
     onDraw = function(self)
-        local c = math.abs(math.sin(self.t/2)) * 255 - 255 * self.dist/100
-        local bounce = math.sin(self.t + self.offset)*self.width
-        local sway = math.sin(self.t * 3 + self.offset)*self.width/5
+        local c = math.abs(math.sin(self.t * 2)) * 255 - 255 * self.dist/100
+        local bounce = math.sin(self.t * 4 + self.offset)*self.width
+        local sway = math.sin(self.t * 5 + self.offset)*self.width/5
 
         love.graphics.setColor(c, c, c)
         love.graphics.circle("fill", self.x + sway, self.y + bounce, self.width/2, 5)

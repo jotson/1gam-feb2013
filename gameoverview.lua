@@ -30,6 +30,11 @@ gameoverView = View:new {
 
     onDraw = function(self)
         love.graphics.setColor(255, 255, 255, 255)
-        love.graphics.print('Game over', 50, 50)
+        love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+
+        love.graphics.setColor(0, 0, 0, 255)
+        love.graphics.printf('GAME OVER', 0, love.graphics.getHeight()/2-20, love.graphics.getWidth(), 'center')
+        
+        love.graphics.setColor(255, 255, 255, 255)
     end
 }

@@ -28,6 +28,8 @@ GROUND_HEIGHT = 500
 
 playView = View:extend {
     id = 'playview',
+    gametime = 0,
+    ending = false,
 
     init = function(self)
         -- Sky
@@ -41,15 +43,16 @@ playView = View:extend {
             }
         )
 
+        -- Build city
+        for i = 1, math.ceil(love.graphics.getWidth()/building.width) do
+            local b = building:new({ x = building.width * (i-1) })
+            the.app:add(b)
+        end
+
         -- Create swarm
         self.swarm = swarm:new()
         the.app:add(self.swarm)
         self.swarm:addMember(10)
-
-        -- Build city
-        for i = 0, math.ceil(love.graphics.getWidth()/building.width) do
-            the.app:add(building:new({ x = building.width * i }))
-        end
 
         -- Add pointer
         self.pointer = pointer:new()
@@ -58,12 +61,23 @@ playView = View:extend {
         -- Setup timers
         -- Stop running timers so they don't accumulate
         self.timer:stop()
-        self.timer:every(1, function() self.swarm:addMember(1, love.graphics.getWidth()/2, GROUND_HEIGHT) end)
-        self.timer:every(1, function() self:launchAsteroid() end)
+        self.timer:every(1/the.app.beat.beats_per_second, function() self.swarm:addMember(1, love.graphics.getWidth()/2, GROUND_HEIGHT) end)
+        self.timer:every(1/the.app.beat.beats_per_second, function() self:launchAsteroid() end)
     end,
 
     launchAsteroid = function(self)
-        local m = asteroid:new()
+        local r = math.random(1000)
+        local size = asteroid.MIN_SIZE
+        if r > 950 then
+            size = asteroid.BIG_ROCK
+        elseif r > 990 then
+            size = asteroid.GIANT_ROCK
+        end
+        -- if self.gametime > 5 then
+        --     size = asteroid.EXTINCTION_ROCK
+        --     self.timer:stop()
+        -- end
+        local m = asteroid:new({ size = size })
         the.app:add(m)
     end,
 
@@ -74,6 +88,23 @@ playView = View:extend {
         if the.keys:justPressed('escape') then
             the.app:changeState(the.app.STATE_PAUSED)
         end
+
+        -- Game over condition
+        if not self.ending then
+            local buildings = 0
+            for i, s in ipairs(self.sprites) do
+                if s.id and s.id == 'building' and s.hp > 0 then
+                    buildings = buildings + 1
+                end
+            end
+            if buildings <= 0 then
+                self.ending = true
+                self:fade({ 255, 255, 255 }, 5)
+                    :andThen(function() the.app:changeState(the.app.STATE_GAMEOVER) end)
+            end
+        end
+
+        self.gametime = self.gametime + dt
     end,
 
     onDraw = function(self)

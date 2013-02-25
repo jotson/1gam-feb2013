@@ -40,9 +40,11 @@ road_img = {
 building = Animation:extend{
     id = 'building',
     
+    hp = 3,
+
     width = 100,
     height = 175,
-    solid = false,
+    solid = true,
     sequences = { default = { frames = { 1 }, fps = 1 } },
 
     onNew = function(self)
@@ -55,5 +57,35 @@ building = Animation:extend{
 
     onDraw = function(self)
         love.graphics.setColor(255,255,255,255)
+    end,
+
+    onCollide = function(self, other, x_overlap, y_overlap)
+        if other.id == 'asteroid' and self.hp > 0 then
+            if other.original_size == asteroid.EXTINCTION_ROCK then
+                the.app:changeState(the.app.STATE_GAMEOVER)
+                return
+            end
+
+            damage = math.min(self.hp, other.size / other.MIN_SIZE)
+
+            self.hp = self.hp - damage
+
+            if self.hp <= 0 then
+                self.tint = { 0.5, 0.5, 0.5 }
+            end
+
+            for i = 1, damage do
+                local offset = math.random() * 40 - 20
+                if i == 1 then
+                    offset = 0
+                end
+                local e = smokeEmitter:new()
+                e.period = 1/(the.app.beat.beats_per_second*4)
+                e.x = other.x + offset
+                e.y = other.y + math.random() * 50
+                e:loadParticles(smoke, 20)
+                the.app:add(e)
+            end
+        end
     end,
 }

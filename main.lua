@@ -30,13 +30,20 @@ require 'gameoverview'
 require 'particles'
 vector = require 'vector'
 
+
 the.app = App:new{
     STATE_START = 1,
     STATE_PLAYING = 2,
     STATE_PAUSED = 3,
     STATE_GAMEOVER = 4,
+    elapsed = 0,
+    BPM = 61, -- Beats/minute
+    beat = {},
 
     name = "Asteroid Defense",
+
+    timer = 0,
+    timer_radians = 0,
 
     onRun = function(self)
         -- Load audio, font, graphics
@@ -78,6 +85,14 @@ the.app = App:new{
     end,
 
     onUpdate = function(self, dt)
+        self.elapsed = self.elapsed + dt
+        
+        self.beat.beats_per_minute = self.BPM
+        self.beat.beats_per_second = self.BPM/60
+        self.beat.radians_per_beat = math.pi
+        self.beat.radians_per_second = self.beat.beats_per_second * self.beat.radians_per_beat
+        self.beat.timer = self.beat.beats_per_second * self.elapsed
+        self.beat.timer_radians = self.beat.radians_per_second * self.elapsed
     end,
 }
 

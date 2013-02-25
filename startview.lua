@@ -36,7 +36,7 @@ startView = View:new {
     end,
 
     onDraw = function(self)
-        local blink_factor = math.abs(math.sin(love.timer.getMicroTime()*1.2))
+        local blink_factor = math.abs(math.sin(the.app.beat.timer_radians*2))
         local start = love.graphics.getHeight() * 0.8;
 
         love.graphics.setColor(255, 255, 255, blink_factor*200+55)

@@ -19,12 +19,12 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 
-FIRE_LIFE = 2
+FIRE_LIFE = 1
 
 fireEmitter = Emitter:extend{
     id = 'fire_emitter',
 
-    period = 0.05,
+    period = 0.1,
     emitCount = 1,
 
     setup = function(self, parent)
@@ -65,7 +65,7 @@ fire = Fill:extend{
 
 EXPLOSION_LIFE = 2
 
-explosionEmitter = Emitter:new{
+explosionEmitter = Emitter:extend{
     id = 'explosion_emitter',
 
     width = 1,
@@ -90,6 +90,43 @@ explosionParticle = Fill:extend{
 
         local t = math.random() * EXPLOSION_LIFE
         the.view.tween:start(self, 'rotation', math.random(-4, 4)*math.pi, t)
+        the.view.tween
+            :start(self, 'alpha', 0, t)
+            :andThen(function() self:die() end)
+    end
+}
+
+SMOKE_LIFE = 3
+
+smokeEmitter = Emitter:extend{
+    id = 'smoke_emitter',
+
+    width = 10,
+    height = 10,
+
+    period = 1,
+    emitCount = 1,
+}
+
+smoke = Fill:extend{
+    id = 'smoke_particle',
+
+    fill = {255, 255, 255},
+    solid = false,
+
+    onEmit = function (self)
+        local v = math.random()
+        self.tint = { v, v, v }
+        self.width = 10
+        self.height = self.width
+        self.alpha = 0.8
+        self.scale = 1
+        self.velocity.y = -30
+        self.velocity.x = 0
+        self.acceleration.x = 4
+
+        local t = SMOKE_LIFE
+        the.view.tween:start(self, 'scale', self.scale*2, t)
         the.view.tween
             :start(self, 'alpha', 0, t)
             :andThen(function() self:die() end)

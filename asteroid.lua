@@ -20,15 +20,18 @@
 -- SOFTWARE.
 
 asteroid = Sprite:extend{
-    MAX_VELOCITY_X = 30,
-    MAX_VELOCITY_Y = 100,
+    MAX_VELOCITY_X = 25,
+    MAX_VELOCITY_Y = 60,
 
     BIG_ROCK = 25,
+    GIANT_ROCK = 50,
+    EXTINCTION_ROCK = 400,
+
     DAMAGE = 5,
 
+    MIN_SIZE = 5,
+
     id = 'asteroid',
-    width = 5,
-    height = 5,
     alpha = 255,
     scale = 1,
     solid = true,
@@ -36,20 +39,22 @@ asteroid = Sprite:extend{
     onNew = function(self)
         self.explosion_snd = love.audio.newSource('snd/explosion.ogg', 'static')
         self.explosion_snd:setLooping(false)
+        self.explosion_snd:setVolume(0.5)
 
-        self.y = -10
-        self.x = math.random(love.graphics.getWidth())
-        self.size = 5
-        if math.random(100) > 95 then
-            self.size = self.BIG_ROCK
-        end
+        self.size = self.size or self.MIN_SIZE
+        self.original_size = self.size
+        self.kind = 'normal'
         self.width = self.size
         self.height = self.size
         self.velocity = {
-            x = math.random() * self.MAX_VELOCITY_X - self.MAX_VELOCITY_X/2,
+            x = math.random() * self.MAX_VELOCITY_X*2 - self.MAX_VELOCITY_X,
             y = math.random() * self.MAX_VELOCITY_Y + 10,
             rotation = math.random() * 20 - 10
         }
+        self.acceleration.y = 10
+
+        self.y = 0 - self.size
+        self.x = math.random(love.graphics.getWidth())
 
         -- Fire and smoke
         self.fireTrail = fireEmitter:new()
@@ -58,10 +63,20 @@ asteroid = Sprite:extend{
         the.app:add(self.fireTrail)
 
         -- Changes for big asteroids        
-        if self.size == self.BIG_ROCK then
+        if self.size >= self.BIG_ROCK then
             self.velocity.x = self.velocity.x * 0.25
-            self.velocity.rotation = self.velocity.rotation * 0.25
+            self.velocity.y = self.velocity.y * 0.5
+            self.velocity.rotation = self.velocity.rotation * 0.1
             self.fireTrail.emitCount = 2
+        end
+
+        if self.size == self.EXTINCTION_ROCK then
+            self.x = love.graphics.getWidth()/2
+            self.velocity = {
+                x = 0,
+                y = 50,
+                rotation = 1
+            }
         end
     end,
 
@@ -101,7 +116,9 @@ asteroid = Sprite:extend{
     explode = function(self)
         self.explosion_snd:play()
 
-        the.app.view:flash({255,255,255}, 0.25)
+        if not the.app.view.ending then
+            the.app.view:flash({255,255,255}, 0.25)
+        end
 
         local explosion = explosionEmitter:new()
         explosion.x = self.x
@@ -110,11 +127,14 @@ asteroid = Sprite:extend{
         explosion:explode()
         the.app:add(explosion)
         the.app.view.timer:after(EXPLOSION_LIFE, function() the.app:remove(explosion) end)
+
     end,
 
     explodeAndDie = function(self)
         self:explode()
         
+        self:collide(the.app.view)
+
         self:die()
         the.app:remove(self)
 
