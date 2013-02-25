@@ -115,8 +115,8 @@ asteroid = Sprite:extend{
     explode = function(self)
         self.explosion_snd:play()
 
-        if not the.app.view.ending then
-            the.app.view:flash({255,255,255}, 0.25)
+        if not the.app.playView.ending then
+            the.app.playView:flash({255,255,255}, 0.25)
         end
 
         local explosion = explosionEmitter:new()
@@ -125,19 +125,19 @@ asteroid = Sprite:extend{
         explosion:loadParticles(explosionParticle, 25)
         explosion:explode()
         the.app:add(explosion)
-        the.app.view.timer:after(EXPLOSION_LIFE, function() the.app:remove(explosion) end)
+        the.app.playView.timer:after(EXPLOSION_LIFE, function() the.app:remove(explosion) end)
 
     end,
 
     explodeAndDie = function(self)
         self:explode()
         
-        self:collide(the.app.view)
+        self:collide(the.app.playView)
 
         self:die()
         the.app:remove(self)
 
         self.fireTrail.emitting = false
-        the.app.view.timer:after(FIRE_LIFE, function() the.app:remove(self.fireTrail) end)
+        the.app.playView.timer:after(FIRE_LIFE, function() the.app:remove(self.fireTrail) end)
     end,
 }

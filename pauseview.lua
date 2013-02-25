@@ -27,7 +27,7 @@ pauseView = View:extend {
     
     onUpdate = function(self, dt)
         if the.keys:justPressed('escape') then
-            the.app:changeState(the.app.STATE_START)
+            the.app:changeState(the.app.STATE_GAMEOVER)
         end
 
         if the.keys:justPressed(' ') then

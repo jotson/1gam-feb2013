@@ -114,7 +114,7 @@ swarm_member = Sprite:extend{
         self.acceleration = { x = self.dir.x * accel, y = self.dir.y * accel }
 
         -- Collision detection to keep minimum distance from other members
-        self:collide(the.app.view)
+        self:collide(the.app.playView)
     end,
 
     onCollide = function(self, other, x_overlap, y_overlap)

@@ -93,7 +93,12 @@ startView = View:extend {
         love.graphics.setFont(the.app.font)
         love.graphics.setColor(255, 255, 255, 255)
 
-        love.graphics.printf('--' .. the.app.name .. "--\nby John Watson\nFebruary 2013", 0, 50, love.graphics.getWidth(), "center")
+        love.graphics.printf('--' .. the.app.name .. "--\nby John Watson February 2013", 0, 50, love.graphics.getWidth(), "center")
+
+        love.graphics.setFont(the.app.font_small)
+        love.graphics.printf("Art: David Baumgart (cc-by)  /  Music: Nine Inch Nails (cc-by-nc-sa)", 0, 100, love.graphics.getWidth(), "center")
+        love.graphics.setFont(the.app.font)
+
         love.graphics.printf("The sky is falling!\nQuick! Use the meteor shield!\nWhat is the name of your city?", 0, 150, love.graphics.getWidth(), "center")
 
         love.graphics.setColor(255, 255, 255, 255)

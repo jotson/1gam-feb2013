@@ -54,6 +54,7 @@ the.app = App:new{
         self.music:play()
 
         the.app.font = love.graphics.newFont('fnt/visitor1.ttf', 24)
+        the.app.font_small = love.graphics.newFont('fnt/visitor1.ttf', 18)
 
         self:changeState(self.STATE_START)
     end,
