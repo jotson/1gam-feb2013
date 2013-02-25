@@ -5,21 +5,21 @@ See CREDITS for full credits.
 
 # Gameplay video
 
-- [Watch video]()
+- [Watch video](http://www.youtube.com/watch?v=3mOqFVJPNtE)
 
 # Running the game
 
 Cross-platform
 
 - [Install LÖVE](https://love2d.org/)
-- [Download the game]()
+- [Download the game](http://flagrantdisregard.com/wp-content/uploads/2013/01/meteordefense-johnwatson-bbc8c5d.love)
 - Double-click to run it
 
 Windows
 
 - Download:
-    - [32 bit]()
-    - [64 bit]()
+    - [32 bit](http://flagrantdisregard.com/wp-content/uploads/2013/01/meteordefense-johnwatson-bbc8c5d_win-x86.zip)
+    - [64 bit](http://flagrantdisregard.com/wp-content/uploads/2013/01/meteordefense-johnwatson-bbc8c5d_win-x64.zip)
 - Extract files
 - Run game.exe
 
